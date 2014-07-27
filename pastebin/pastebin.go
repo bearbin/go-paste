@@ -11,9 +11,14 @@ import (
 	"strings"
 )
 
-const pastebinDevKey = "d06a9df64b29123b8eeda23f53d6535d"
+const (
+	pastebinDevKey = "d06a9df64b29123b8eeda23f53d6535d"
+)
 
-var PastebinPutError = errors.New("Pastebin Put Failed!")
+var (
+	ErrPutFailed = errors.New("Pastebin Put Failed!")
+	ErrGetFailed = errors.New("Pastebin Get Failed!")
+)
 
 // Function Put uploads text to Pastebin with optional title returning the ID or
 // an error.
@@ -36,7 +41,7 @@ func Put(text, title string) (id string, err error) {
 		return "", err
 	}
 	if resp.StatusCode != 200 {
-		return "", PastebinPutError
+		return "", ErrPutFailed
 	}
 	defer resp.Body.Close()
 	respBody, err := ioutil.ReadAll(resp.Body)
@@ -44,4 +49,21 @@ func Put(text, title string) (id string, err error) {
 		return "", err
 	}
 	return strings.Replace(string(respBody), "http://pastebin.com/", "", -1), nil
+}
+
+// Function Get returns the text inside the paste identified by ID.
+func Get(id string) (text string, err error) {
+	resp, err := http.Get("http://pastebin.com/raw.php?i=" + id)
+	if err != nil {
+		return "", err
+	}
+	if resp.StatusCode != 200 {
+		return "", ErrGetFailed
+	}
+	defer resp.Body.Close()
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(respBody), nil
 }

@@ -14,7 +14,7 @@ func main() {
 		{
 			Name:      "put",
 			ShortName: "p",
-			Usage:     "get a username from a uuid",
+			Usage:     "put a paste",
 			Flags: []cli.Flag{
 				cli.StringFlag{Name: "title, t", Value: "", Usage: "the title for the paste"},
 			},
@@ -27,7 +27,7 @@ func main() {
 					text, err = ioutil.ReadFile(c.Args().First())
 				}
 				if err != nil {
-					println(err)
+					println("ERROR: ", err.Error())
 					os.Exit(1)
 				}
 				code, err := pastebin.Put(string(text), c.String("title"))
@@ -35,6 +35,19 @@ func main() {
 					println("ERROR: ", err.Error())
 				}
 				println(code)
+			},
+		},
+		{
+			Name:      "get",
+			ShortName: "g",
+			Usage:     "get a paste",
+			Action: func(c *cli.Context) {
+				text, err := pastebin.Get(c.Args().First())
+				if err != nil {
+					println("ERROR: ", err.Error())
+					os.Exit(1)
+				}
+				println(text)
 			},
 		},
 	}
