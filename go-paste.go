@@ -21,7 +21,7 @@ func main() {
 			Action: func(c *cli.Context) {
 				var err error
 				var text []byte
-				if c.Args().First() == "-" {
+				if c.Args().First() == "-" || c.Args().First() == "" {
 					text, err = ioutil.ReadAll(os.Stdin)
 				} else {
 					text, err = ioutil.ReadFile(c.Args().First())
