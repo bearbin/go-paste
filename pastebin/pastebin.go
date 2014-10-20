@@ -67,3 +67,13 @@ func Get(id string) (text string, err error) {
 	}
 	return string(respBody), nil
 }
+
+// Function StripURL returns the paste ID from a pastebin URL.
+func StripURL(url string) string {
+	return strings.TrimPrefix(url, "http://pastebin.com/")
+}
+
+// Function WrapID returns the pastebin URL from a paste ID.
+func WrapID(id string) string {
+	return "http://pastebin.com/" + id
+}

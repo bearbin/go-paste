@@ -16,6 +16,7 @@ func main() {
 			ShortName: "p",
 			Usage:     "put a paste",
 			Flags: []cli.Flag{
+				cli.BoolFlag{Name: "id", Usage: "return the paste id not the url"},
 				cli.StringFlag{Name: "title, t", Value: "", Usage: "the title for the paste"},
 			},
 			Action: func(c *cli.Context) {
@@ -34,15 +35,28 @@ func main() {
 				if err != nil {
 					println("ERROR: ", err.Error())
 				}
-				println(code)
+				if c.Bool("id") {
+					println(code)
+				} else {
+					println(pastebin.WrapID(code))
+				}
 			},
 		},
 		{
 			Name:      "get",
 			ShortName: "g",
-			Usage:     "get a paste",
+			Usage:     "get a paste from its url",
+			Flags: []cli.Flag{
+				cli.BoolFlag{Name: "id", Usage: "get a paste from its ID instead of its URL"},
+			},
 			Action: func(c *cli.Context) {
-				text, err := pastebin.Get(c.Args().First())
+				var id string
+				if c.Bool("id") {
+					id = c.Args().First()
+				} else {
+					id = pastebin.StripURL(c.Args().First())
+				}
+				text, err := pastebin.Get(id)
 				if err != nil {
 					println("ERROR: ", err.Error())
 					os.Exit(1)
