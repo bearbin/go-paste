@@ -18,9 +18,18 @@ Put from stdin:
 
     go-paste put -
 
+Put your data on fpaste, not pastebin:
+
+    go-paste -s fpaste put example-file
+
 Get a paste:
 
 	go-paste get http://pastebin.com/ZTBUm4B2
+
+## Supported Paste Services
+
+ - pastebin.com
+ - fpaste.org
 
 ## Development
 
