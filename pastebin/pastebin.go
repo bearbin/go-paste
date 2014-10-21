@@ -3,7 +3,6 @@
 package pastebin
 
 import (
-	"bytes"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -33,10 +32,7 @@ func Put(text, title string) (id string, err error) {
 	data.Set("api_paste_private", "0")     // Create a public paste.
 	data.Set("api_paste_expire_date", "N") // The paste should never expire.
 
-	// Parse and URLEncode the values ready to pass to Pastebin.
-	body := bytes.NewBufferString(data.Encode())
-
-	resp, err := http.Post("http://pastebin.com/api/api_post.php", "application/x-www-form-urlencoded", body)
+	resp, err := http.PostForm("http://pastebin.com/api/api_post.php", data)
 	if err != nil {
 		return "", err
 	}
