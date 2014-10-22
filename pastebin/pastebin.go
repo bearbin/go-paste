@@ -23,7 +23,7 @@ type Pastebin struct{}
 
 // Function Put uploads text to Pastebin with optional title returning the ID or
 // an error.
-func (p Pastebin) Put(pburl, text, title string) (id string, err error) {
+func (p Pastebin) Put(text, title string) (id string, err error) {
 	data := url.Values{}
 	// Required values.
 	data.Set("api_dev_key", pastebinDevKey)
@@ -50,7 +50,7 @@ func (p Pastebin) Put(pburl, text, title string) (id string, err error) {
 }
 
 // Function Get returns the text inside the paste identified by ID.
-func (p Pastebin) Get(url, id string) (text string, err error) {
+func (p Pastebin) Get(id string) (text string, err error) {
 	resp, err := http.Get("http://pastebin.com/raw.php?i=" + id)
 	if err != nil {
 		return "", err

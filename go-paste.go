@@ -27,7 +27,7 @@ func main() {
 				cli.StringFlag{Name: "title, t", Value: "", Usage: "the title for the paste"},
 			},
 			Action: func(c *cli.Context) {
-				srv, url, err := convertService(c.GlobalString("service"))
+				srv, err := convertService(c.GlobalString("service"))
 				if err != nil {
 					println("ERROR:", err.Error())
 					os.Exit(1)
@@ -42,7 +42,7 @@ func main() {
 					println("ERROR:", err.Error())
 					os.Exit(1)
 				}
-				code, err := srv.Put(url, string(text), c.String("title"))
+				code, err := srv.Put(string(text), c.String("title"))
 				if err != nil {
 					println("ERROR:", err.Error())
 					os.Exit(1)
@@ -62,7 +62,7 @@ func main() {
 				cli.BoolFlag{Name: "id", Usage: "get a paste from its ID instead of its URL"},
 			},
 			Action: func(c *cli.Context) {
-				srv, url, err := convertService(c.GlobalString("service"))
+				srv, err := convertService(c.GlobalString("service"))
 				if err != nil {
 					println("ERROR:", err.Error())
 					os.Exit(1)
@@ -73,7 +73,7 @@ func main() {
 				} else {
 					id = srv.StripURL(c.Args().First())
 				}
-				text, err := srv.Get(url, id)
+				text, err := srv.Get(id)
 				if err != nil {
 					println("ERROR:", err.Error())
 					os.Exit(1)
@@ -85,12 +85,12 @@ func main() {
 	app.Run(os.Args)
 }
 
-func convertService(srv string) (service, string, error) {
+func convertService(srv string) (service, error) {
 	switch {
 	case srv == "pastebin" || srv == "pastebin.com" || srv == "http://pastebin.com":
-		return pastebin.Pastebin{}, "", nil
+		return pastebin.Pastebin{}, nil
 	case srv == "fpaste" || srv == "fpaste.org" || srv == "http://fpaste.org":
-		return fpaste.Fpaste{}, "", nil
+		return fpaste.Fpaste{}, nil
 	}
-	return nil, "", errUnknownService
+	return nil, errUnknownService
 }

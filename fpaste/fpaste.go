@@ -23,9 +23,10 @@ type fpasteResponse struct {
 	} `json:"result"`
 }
 
-// Function Put uploads text to Pastebin with optional title returning the ID or
-// an error.
-func (f Fpaste) Put(pburl, text, title string) (id string, err error) {
+// Function Put uploads text to fpaste.org. It returns the ID of the created
+// paste or an error. The title is not used, as the service does not support
+// titles.
+func (f Fpaste) Put(text, title string) (id string, err error) {
 	data := url.Values{}
 	// Required values.
 	data.Set("paste_data", text)
@@ -56,7 +57,7 @@ func (f Fpaste) Put(pburl, text, title string) (id string, err error) {
 }
 
 // Function Get returns the text inside the paste identified by ID.
-func (f Fpaste) Get(url, id string) (text string, err error) {
+func (f Fpaste) Get(id string) (text string, err error) {
 	resp, err := http.Get("http://fpaste.org/" + id + "/raw/")
 	if err != nil {
 		return "", err
@@ -72,12 +73,12 @@ func (f Fpaste) Get(url, id string) (text string, err error) {
 	return string(respBody), nil
 }
 
-// Function StripURL returns the paste ID from a pastebin URL.
+// Function StripURL returns the paste ID from a fpaste URL.
 func (f Fpaste) StripURL(url string) string {
 	return strings.Replace(url, "http://fpaste.org/", "", -1)
 }
 
-// Function WrapID returns the pastebin URL from a paste ID.
+// Function WrapID returns the fpaste URL from a paste ID.
 func (f Fpaste) WrapID(id string) string {
 	return "http://fpaste.org/" + id
 }
