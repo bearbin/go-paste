@@ -15,14 +15,16 @@ const (
 )
 
 var (
-	ErrPutFailed = errors.New("Pastebin Put Failed!")
-	ErrGetFailed = errors.New("Pastebin Get Failed!")
+	// ErrPutFailed is returned when a paste could not be uploaded to pastebin.
+	ErrPutFailed = errors.New("pastebin put failed")
+	// ErrGetFailed is returned when a paste could not be fetched from pastebin.
+	ErrGetFailed = errors.New("pastebin get failed")
 )
 
+// Pastebin represents an instance of the pastebin service.
 type Pastebin struct{}
 
-// Function Put uploads text to Pastebin with optional title returning the ID or
-// an error.
+// Put uploads text to Pastebin with optional title returning the ID or an error.
 func (p Pastebin) Put(text, title string) (id string, err error) {
 	data := url.Values{}
 	// Required values.
@@ -49,7 +51,7 @@ func (p Pastebin) Put(text, title string) (id string, err error) {
 	return p.StripURL(string(respBody)), nil
 }
 
-// Function Get returns the text inside the paste identified by ID.
+// Get returns the text inside the paste identified by ID.
 func (p Pastebin) Get(id string) (text string, err error) {
 	resp, err := http.Get("http://pastebin.com/raw.php?i=" + id)
 	if err != nil {
@@ -66,12 +68,12 @@ func (p Pastebin) Get(id string) (text string, err error) {
 	return string(respBody), nil
 }
 
-// Function StripURL returns the paste ID from a pastebin URL.
+// StripURL returns the paste ID from a pastebin URL.
 func (p Pastebin) StripURL(url string) string {
 	return strings.Replace(url, "http://pastebin.com/", "", -1)
 }
 
-// Function WrapID returns the pastebin URL from a paste ID.
+// WrapID returns the pastebin URL from a paste ID.
 func (p Pastebin) WrapID(id string) string {
 	return "http://pastebin.com/" + id
 }
