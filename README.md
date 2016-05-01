@@ -33,4 +33,4 @@ Get a paste:
 
 ## Development
 
-go-paste is MIT licensed, and Pull Requests are welcome.
+go-paste is Public Domain software and Pull Requests are welcome.
