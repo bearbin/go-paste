@@ -3,8 +3,8 @@
 package pastebin
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -12,6 +12,7 @@ import (
 )
 
 const (
+	baseURL        = "https://pastebin.com/"
 	pastebinDevKey = "d06a9df64b29123b8eeda23f53d6535d"
 )
 
@@ -37,7 +38,7 @@ func (p Pastebin) Put(text, title string) (id string, err error) {
 	data.Set("api_paste_private", "0")     // Create a public paste.
 	data.Set("api_paste_expire_date", "N") // The paste should never expire.
 
-	resp, err := http.PostForm("https://pastebin.com/api/api_post.php", data)
+	resp, err := http.PostForm(baseURL+"api/api_post.php", data)
 	if err != nil {
 		return "", err
 	}
@@ -54,7 +55,7 @@ func (p Pastebin) Put(text, title string) (id string, err error) {
 
 // Get returns the text inside the paste identified by ID.
 func (p Pastebin) Get(id string) (text string, err error) {
-	resp, err := http.Get("http://pastebin.com/raw.php?i=" + id)
+	resp, err := http.Get(baseURL + "raw.php?i=" + id)
 	if err != nil {
 		return "", err
 	}
@@ -71,7 +72,7 @@ func (p Pastebin) Get(id string) (text string, err error) {
 
 // StripURL returns the paste ID from a pastebin URL.
 func (p Pastebin) StripURL(url string) string {
-	return strings.Replace(url, "http://pastebin.com/", "", -1)
+	return strings.Replace(url, baseURL, "", -1)
 }
 
 // WrapID returns the pastebin URL from a paste ID.
