@@ -3,6 +3,7 @@
 package pastebin
 
 import (
+	"fmt"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -36,17 +37,17 @@ func (p Pastebin) Put(text, title string) (id string, err error) {
 	data.Set("api_paste_private", "0")     // Create a public paste.
 	data.Set("api_paste_expire_date", "N") // The paste should never expire.
 
-	resp, err := http.PostForm("http://pastebin.com/api/api_post.php", data)
+	resp, err := http.PostForm("https://pastebin.com/api/api_post.php", data)
 	if err != nil {
 		return "", err
-	}
-	if resp.StatusCode != 200 {
-		return "", ErrPutFailed
 	}
 	defer resp.Body.Close()
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
+	}
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("%w: %s", ErrPutFailed, string(respBody))
 	}
 	return p.StripURL(string(respBody)), nil
 }
