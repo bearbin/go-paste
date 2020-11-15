@@ -77,5 +77,5 @@ func (p Pastebin) StripURL(url string) string {
 
 // WrapID returns the pastebin URL from a paste ID.
 func (p Pastebin) WrapID(id string) string {
-	return "http://pastebin.com/" + id
+	return baseURL + id
 }
