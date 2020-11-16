@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"github.com/bearbin/go-paste/fpaste"
 	"github.com/bearbin/go-paste/pastebin"
 	"github.com/codegangsta/cli"
 	"io/ioutil"
@@ -89,8 +88,6 @@ func convertService(srv string) (service, error) {
 	switch {
 	case srv == "pastebin" || srv == "pastebin.com" || srv == "http://pastebin.com":
 		return pastebin.Pastebin{}, nil
-	case srv == "fpaste" || srv == "fpaste.org" || srv == "http://fpaste.org":
-		return fpaste.Fpaste{}, nil
 	}
 	return nil, errUnknownService
 }
